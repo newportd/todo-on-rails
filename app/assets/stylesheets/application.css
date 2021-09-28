@@ -13,3 +13,48 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+    font-family: 'Arial';
+    font-size: 1.25em;
+    margin: 0;
+}
+
+main {
+    margin: 2em auto;
+    width: 33.3333333333%;
+}
+
+nav {
+    text-align: center;
+}
+
+nav a, nav a:visited {
+    color: rgb(107, 112, 92);
+    text-decoration: none;
+    transition: 0.5s;
+}
+
+nav a:hover {
+    color: rgb(183, 183, 164);
+    transition: 0.5s;
+}
+
+ul#messages {
+    list-style-type: none;
+    padding: 0;
+}
+
+.alert {
+    color: red;
+}
+
+.notice {
+    color: green;
+}
+
+@media(max-width: 768px) {
+    main {
+        width: 98%;
+    }
+}

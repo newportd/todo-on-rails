@@ -11,6 +11,28 @@
   </head>
 
   <body>
+    <main>
+    <% if user_signed_in? %>
+      <nav>
+        <p>
+          Logged in as <strong><%= current_user.email %></strong>.
+        </p>
+        <%= link_to "Home", root_path %> |
+        <%= link_to "Edit profile", edit_user_registration_path %> |
+        <%= link_to "Logout", destroy_user_session_path, method: :delete  %>
+      </nav>
+    <% end %>
+
+    <ul id="messages">
+    <% if notice %>
+      <li class="notice"><%= notice %></li>
+    <% end %>
+    <% if alert %>
+      <li class="alert"><%= alert %></li>
+    <% end %>
+    </ul>
+
     <%= yield %>
+    </main>
   </body>
 </html>
