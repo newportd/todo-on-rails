@@ -1,24 +1,19 @@
-# README
+# todo
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a simple Ruby on Rails application implementing a per-user task list.
 
-Things you may want to cover:
+## Setup
 
-* Ruby version
+Run `bundle install` to install the required dependencies.
 
-* System dependencies
+## Running Locally
 
-* Configuration
+Run `rails server` to start a local development server.
 
-* Database creation
+## Running Tests
 
-* Database initialization
+Run `rails test` to run tests or `rails test:system` to run system tests.
 
-* How to run the test suite
+## Deploying
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+TODO

@@ -1,0 +1,13 @@
+<p>
+  <strong>Body:</strong>
+  <%= @task.body %>
+</p>
+
+<p>
+  <strong>Completed?:</strong>
+  <%= @task.completed_at.nil? ? "No" : "Yes" %>
+</p>
+
+<%= link_to 'Edit', edit_task_path(@task), aria: { disabled: !@task.completed_at.nil? } \
+      , class: @task.completed_at.nil? ? "" : "disabled" %> |
+<%= link_to 'Back', tasks_path %>
