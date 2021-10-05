@@ -1,0 +1,102 @@
+---
+
+- hosts: app_todo
+  handlers:
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+
+  tasks:
+    - name: Install dependencies
+      community.general.pacman:
+        name:
+          - base-devel
+          - git
+          - nodejs
+          - ruby
+          - ruby-bundler
+          - yarn
+        state: latest
+
+    - name: Create todo group
+      ansible.builtin.group:
+        name: todo
+        state: present
+
+    - name: Create todo user
+      ansible.builtin.user:
+        group: todo
+        home: /opt/todo
+        name: todo
+        state: present
+
+    - name: Allow todo group write access in todo home
+      ansible.builtin.file:
+        group: todo
+        mode: 0770
+        owner: todo
+        path: /opt/todo
+        state: directory
+
+    - name: Add the http user to the todo group
+      ansible.builtin.user:
+        append: yes
+        groups:
+          - todo
+        name: http
+        state: present
+
+    - name: Setup todo tmpfiles
+      ansible.builtin.copy:
+        dest: /etc/tmpfiles.d/todo.conf
+        group: root
+        mode: 0644
+        owner: root
+        src: todo.conf
+
+    - name: Create todo log directory
+      ansible.builtin.file:
+        group: todo
+        mode: 0775
+        owner: todo
+        path: /var/log/todo/
+        state: directory
+
+    - name: Copy todo systemd unit
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/puma_todo-on-rails_production.service
+        group: root
+        mode: 0644
+        owner: root
+        src: todo.service
+      register: todo_service
+    
+    - name: Reload todo daemons
+      ansible.builtin.command:
+        cmd: /usr/bin/systemctl daemon-reload
+      when: todo_service.changed
+
+    - name: Request todo.newport.solutions TLS certificates
+      ansible.builtin.command:
+        cmd: /usr/bin/certbot certonly -n -m "dan@newport.solutions" --agree-tos --webroot -w /srv/http/letsencrypt -d todo.newport.solutions
+        creates: /etc/letsencrypt/live/todo.newport.solutions
+
+    - name: Fix permissions on TLS certificates
+      ansible.builtin.file:
+        group: http
+        mode: 0640
+        owner: root
+        path: /etc/letsencrypt/live/todo.newport.solutions/privkey.pem
+        state: file
+
+    - name: Configure nginx
+      ansible.builtin.copy:
+        dest: /etc/nginx/conf.d/todo.newport.solutions.conf
+        group: root
+        mode: 0644
+        owner: root
+        src: todo.newport.solutions.conf
+      notify: Restart nginx
+
+# TODO copy the master.key

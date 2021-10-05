@@ -16,4 +16,6 @@ Run `rails test` to run tests or `rails test:system` to run system tests.
 
 ## Deploying
 
-TODO
+Deployment is managed via Capistrano. You will need to have `ssh-agent` running and load your SSH credentials using `ssh-add`.
+
+To deploy run `cap production deploy`.
