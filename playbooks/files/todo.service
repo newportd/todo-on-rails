@@ -1,0 +1,18 @@
+[Unit]
+Description=Todo Application (production)
+After=network.target
+
+[Service]
+ExecReload=kill -TSTP $MAINPID
+ExecStart=bundle exec puma -C /opt/todo/shared/puma.rb
+Restart=always
+RestartSec=5
+StandardError=append:/opt/todo/current/log/puma.error.log
+StandardOutput=append:/opt/todo/current/log/puma.access.log
+SyslogIdentifier=puma
+Type=simple
+User=todo
+WorkingDirectory=/opt/todo/current
+
+[Install]
+WantedBy=multi-user.target
