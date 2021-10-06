@@ -5,6 +5,7 @@ class TasksTest < ApplicationSystemTestCase
 
   setup do
     @user = users(:testuser)
+    @otheruser = users(:otheruser)
     @task = tasks(:testtask)
   end
 
@@ -51,7 +52,18 @@ class TasksTest < ApplicationSystemTestCase
       ["Here is a modified second task.", "", "Show", "Edit", "Delete"]
     ]
 
-    # delete the new task
+    using_session "otheruser session" do
+      sign_in @otheruser
+      visit root_path
+      assert_current_path root_path
+
+      # validate otheruser is viewing the correct tasks
+      assert_table 'task-list', :rows => [
+        ["This is the first task for otheruser.", "", "Show", "Edit", "Delete"]
+      ]
+    end
+
+    # back in the testuser session delete the new task
     accept_confirm 'Are you sure you want to delete this task?' do
       click_task_link 'Here is a modified second task.', 'Delete'
     end

@@ -2,3 +2,7 @@
 testtask:
   user: testuser
   body: This is my task.
+
+othertask:
+  user: otheruser
+  body: This is the first task for otheruser.
